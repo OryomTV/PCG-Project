@@ -6,7 +6,7 @@ SpriteAtlas:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SquareTileSpriteAtlas
+  m_Name: BiomeAtlas
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -26,8 +26,8 @@ SpriteAtlas:
       padding: 4
       blockOffset: 1
       allowAlphaSplitting: 0
-      enableRotation: 1
-      enableTightPacking: 1
+      enableRotation: 0
+      enableTightPacking: 0
       enableAlphaDilation: 0
     secondaryTextureSettings: {}
     variantMultiplier: 1
@@ -88,5 +88,5 @@ SpriteAtlas:
   - plains00
   - base00
   m_RenderDataMap: {}
-  m_Tag: SquareTileSpriteAtlas
+  m_Tag: BiomeAtlas
   m_IsVariant: 0

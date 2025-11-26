@@ -58,31 +58,42 @@ namespace PCG.Project
 
         // Full Generation
         void GenerateTerrain()
-        {
-            TileBase[] buffer = new TileBase[width * height];
-            int i = 0;
+        { 
+            int mapResolutionX = width / 2;
+            int mapResolutionY = height / 2;
+
+            TileBase[] buffer = new TileBase[mapResolutionX * mapResolutionY];
 
             float invTerrainScale = 1f / terrainScale;
             float invBiomeScale = 1f / biomeScale;
 
-            for (int y = 0; y < height; y++)
+            float stepSize = 2f;
+
+            for (int y = 0; y < mapResolutionY; y++)
             {
-                float ty = (y + offsetTerrainY) * invTerrainScale;
-                float by = (y + offsetBiomeY) * invBiomeScale;
+                float worldY = y * stepSize;
 
-                float latitude = (float)y / height;
+                float latitude = worldY / height;
 
-                for (int x = 0; x < width; x++)
+                float ty = (worldY + offsetTerrainY) * invTerrainScale;
+                float by = (worldY + offsetBiomeY) * invBiomeScale;
+
+                for (int x = 0; x < mapResolutionX; x++)
                 {
-                    float terrainNoise = Mathf.PerlinNoise((x + offsetTerrainX) * invTerrainScale, ty);
-                    float biomeNoise = Mathf.PerlinNoise((x + offsetBiomeX) * invBiomeScale, by);
+                    float worldX = x * stepSize;
 
-                    TileBase tile = ChooseBiomeTile(terrainNoise, biomeNoise, latitude);
-                    buffer[i++] = tile;
+                    float nx = (worldX + offsetTerrainX) * invTerrainScale;
+                    float bx = (worldX + offsetBiomeX) * invBiomeScale;
+
+                    float terrainNoise = Mathf.PerlinNoise(nx, ty);
+                    float biomeNoise = Mathf.PerlinNoise(bx, by);
+
+                    int index = x + y * mapResolutionX;
+                    buffer[index] = ChooseBiomeTile(terrainNoise, biomeNoise, latitude);
                 }
             }
 
-            tilemap.SetTilesBlock(new BoundsInt(0, 0, 0, width, height, 1), buffer);
+            tilemap.SetTilesBlock(new BoundsInt(0, 0, 0, mapResolutionX, mapResolutionY, 1), buffer);
         }
 
         // Biome Decision

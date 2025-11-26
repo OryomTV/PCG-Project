@@ -66,14 +66,14 @@ namespace PCG.Project
 
             int index = 0;
 
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < height; y += 2)
             {
                 float latitude = y * invHeight;
 
                 float ty = (y + offsetTerrainY) * invTerrainScale;
                 float by = (y + offsetBiomeY) * invBiomeScale;
 
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < width; x += 2)
                 {
                     float nx = (x + offsetTerrainX) * invTerrainScale;
                     float bx = (x + offsetBiomeX) * invBiomeScale;
@@ -81,9 +81,12 @@ namespace PCG.Project
                     float terrainNoise = Mathf.PerlinNoise(nx, ty);
                     float biomeNoise = Mathf.PerlinNoise(bx, by);
 
-                    buffer[index++] = ChooseBiomeTile(terrainNoise, biomeNoise, latitude);
+                    index = x + y * width;
+                    buffer[index] = ChooseBiomeTile(terrainNoise, biomeNoise, latitude);
                 }
             }
+
+
 
             tilemap.SetTilesBlock(new BoundsInt(0, 0, 0, width, height, 1), buffer);
         }
