@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 
 namespace PCG.Project
 {
-    public class ProceduralBiomeGeneratorPolaire : MonoBehaviour
+    public class test : MonoBehaviour
     {
         [Header("Tilemap")]
         [SerializeField] private Tilemap tilemap;
@@ -42,7 +42,6 @@ namespace PCG.Project
             GenerateTerrain();
         }
 
-        // Seed & Offsets
         void InitializeOffsets()
         {
             if (useRandomSeed)
@@ -50,52 +49,56 @@ namespace PCG.Project
 
             Random.InitState(seed);
 
-            offsetTerrainX = Random.Range(0f, 100000f);
-            offsetTerrainY = Random.Range(0f, 100000f);
-            offsetBiomeX = Random.Range(0f, 100000f);
-            offsetBiomeY = Random.Range(0f, 100000f);
+            offsetTerrainX = Random.value * 100000f;
+            offsetTerrainY = Random.value * 100000f;
+            offsetBiomeX = Random.value * 100000f;
+            offsetBiomeY = Random.value * 100000f;
         }
 
-        // Full Generation
         void GenerateTerrain()
         {
             TileBase[] buffer = new TileBase[width * height];
-            int i = 0;
 
+            // Pre-calc scales
             float invTerrainScale = 1f / terrainScale;
             float invBiomeScale = 1f / biomeScale;
+            float invHeight = 1f / height;
+
+            int index = 0;
 
             for (int y = 0; y < height; y++)
             {
+                float latitude = y * invHeight;
+
                 float ty = (y + offsetTerrainY) * invTerrainScale;
                 float by = (y + offsetBiomeY) * invBiomeScale;
 
-                float latitude = (float)y / height;
-
                 for (int x = 0; x < width; x++)
                 {
-                    float terrainNoise = Mathf.PerlinNoise((x + offsetTerrainX) * invTerrainScale, ty);
-                    float biomeNoise = Mathf.PerlinNoise((x + offsetBiomeX) * invBiomeScale, by);
+                    float nx = (x + offsetTerrainX) * invTerrainScale;
+                    float bx = (x + offsetBiomeX) * invBiomeScale;
 
-                    TileBase tile = ChooseBiomeTile(terrainNoise, biomeNoise, latitude);
-                    buffer[i++] = tile;
+                    float terrainNoise = Mathf.PerlinNoise(nx, ty);
+                    float biomeNoise = Mathf.PerlinNoise(bx, by);
+
+                    buffer[index++] = ChooseBiomeTile(terrainNoise, biomeNoise, latitude);
                 }
             }
 
             tilemap.SetTilesBlock(new BoundsInt(0, 0, 0, width, height, 1), buffer);
         }
 
-        // Biome Decision
         TileBase ChooseBiomeTile(float terrain, float biome, float latitude)
         {
-            float climate = Mathf.Lerp(latitude, biome, 0.5f);
+            float climate = (latitude + biome) * 0.5f;
 
+            // Relief first
             if (terrain < 0.28f) return waterTile;
             if (terrain < 0.32f) return sandTile;
-
-            if (terrain >= 0.8f) return mountainTile;
             if (terrain >= 0.92f) return volcanoTile;
+            if (terrain >= 0.8f) return mountainTile;
 
+            // Climate second
             if (climate < 0.2f) return snowTile;
             if (climate < 0.4f) return forestTile;
             if (climate < 0.6f) return grassTile;
