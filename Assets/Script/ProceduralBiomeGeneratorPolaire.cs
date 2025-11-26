@@ -69,7 +69,7 @@ namespace PCG.Project
 
             float stepSize = 2f;
 
-            for (int y = 0; y < mapResolutionY; y++)
+            for (int y = 0; y < mapResolutionY; y+=2)
             {
                 float worldY = y * stepSize;
 
@@ -78,7 +78,7 @@ namespace PCG.Project
                 float ty = (worldY + offsetTerrainY) * invTerrainScale;
                 float by = (worldY + offsetBiomeY) * invBiomeScale;
 
-                for (int x = 0; x < mapResolutionX; x++)
+                for (int x = 0; x < mapResolutionX; x+=2)
                 {
                     float worldX = x * stepSize;
 
