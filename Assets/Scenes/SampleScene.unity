@@ -360,7 +360,7 @@ TilemapRenderer:
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
-  m_SortOrder: 0
+  m_SortOrder: 2
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
@@ -474,6 +474,7 @@ GameObject:
   - component: {fileID: 1577031496}
   - component: {fileID: 1577031495}
   - component: {fileID: 1577031494}
+  - component: {fileID: 1577031497}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -488,7 +489,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1577031493}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca12948aca1b0de4bb2dc0b7983333a9, type: 3}
   m_Name: 
@@ -500,10 +501,10 @@ MonoBehaviour:
   forestTile: {fileID: 11400000, guid: 2921f75585912224b99f465ae1088e31, type: 2}
   mountainTile: {fileID: 11400000, guid: 00d601cd3e5d6df4ca65373be16c934d, type: 2}
   volcanoTile: {fileID: 11400000, guid: 8f090c07885fc32469f873e967ee0367, type: 2}
-  width: 159
-  height: 159
-  terrainScale: 63
-  biomeScale: 40
+  width: 1000
+  height: 1000
+  terrainScale: 50
+  biomeScale: 20
   useRandomSeed: 0
   seed: 5
 --- !u!156049354 &1577031495
@@ -534,6 +535,34 @@ Transform:
   - {fileID: 603741233}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1577031497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577031493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 425185acaa621a248bc99380636f402d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilemap: {fileID: 603741231}
+  waterTile: {fileID: 11400000, guid: 718ab1ce3feed114db83785b89793aab, type: 2}
+  sandTile: {fileID: 11400000, guid: aa07a1ccf900f54429d06ec33af30ab9, type: 2}
+  grassTile: {fileID: 11400000, guid: 891d0c83332f38e4ea33b74817785b58, type: 2}
+  forestTile: {fileID: 11400000, guid: 34f41d154528ef84881274ecd040cade, type: 2}
+  snowTile: {fileID: 11400000, guid: 0febdaf8a02a64743b6c6b6f9d9d65c3, type: 2}
+  savannahTile: {fileID: 11400000, guid: 2921f75585912224b99f465ae1088e31, type: 2}
+  desertTile: {fileID: 11400000, guid: 86d8f0e043b0524489a3663d301bf87a, type: 2}
+  mountainTile: {fileID: 11400000, guid: 00d601cd3e5d6df4ca65373be16c934d, type: 2}
+  volcanoTile: {fileID: 11400000, guid: 8f090c07885fc32469f873e967ee0367, type: 2}
+  width: 200
+  height: 200
+  terrainScale: 20
+  biomeScale: 20
+  useRandomSeed: 0
+  seed: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
