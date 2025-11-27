@@ -8,6 +8,12 @@ namespace PCG.Project
     {
         public static void Generate(MapData data, TileBase[] buffer)
         {
+            if (data.cityTiles == null || data.cityTiles.Length == 0)
+            {
+                Debug.LogError("Attention : Aucun tile de bâtiment assigné dans le Map Profile !");
+                return;
+            }
+
             int resX = data.width / 2;
             int resY = data.height / 2;
             int totalTiles = resX * resY;
@@ -63,6 +69,7 @@ namespace PCG.Project
                 buffer[pos.x + pos.y * w] = d.roadTile;
                 if (Random.value > 0.7f) connectors.Add(pos);
             }
+
             PlaceCityAndRegisterPoints(d, buffer, w, h, cityCenter.x, cityCenter.y, cSize, connectors);
             return true;
         }
@@ -70,6 +77,9 @@ namespace PCG.Project
         static int PlaceCityAndRegisterPoints(MapData d, TileBase[] buffer, int w, int h, int cx, int cy, int size, List<Vector2Int> connectors)
         {
             int count = 0;
+            Vector2 center = new Vector2(cx, cy);
+            float maxDist = size * 1.2f;
+
             for (int x = cx - size; x <= cx + size; x++)
             {
                 for (int y = cy - size; y <= cy + size; y++)
@@ -79,7 +89,20 @@ namespace PCG.Project
 
                     if (!IsHuman(d, buffer[idx]))
                     {
-                        buffer[idx] = d.cityTile;
+                        float dist = Vector2.Distance(new Vector2(x, y), center);
+
+                        float t = Mathf.Clamp01(dist / maxDist);
+
+                        float density = 1f - t;
+
+                        float randomNoise = Random.Range(-0.2f, 0.2f);
+                        float finalVal = Mathf.Clamp01(density + randomNoise);
+
+                        int buildingIndex = Mathf.FloorToInt(finalVal * (d.cityTiles.Length - 1));
+
+                        buildingIndex = Mathf.Clamp(buildingIndex, 0, d.cityTiles.Length - 1);
+
+                        buffer[idx] = d.cityTiles[buildingIndex];
                         count++;
                     }
 
@@ -111,7 +134,18 @@ namespace PCG.Project
             return buffer[idx] != d.waterTile && !IsHuman(d, buffer[idx]);
         }
 
-        static bool IsHuman(MapData d, TileBase t) => t == d.roadTile || t == d.cityTile;
+        static bool IsHuman(MapData d, TileBase t)
+        {
+            if (t == null) return false;
+            if (t == d.roadTile) return true;
+
+            for (int i = 0; i < d.cityTiles.Length; i++)
+            {
+                if (t == d.cityTiles[i]) return true;
+            }
+            return false;
+        }
+
         static bool IsInside(int x, int y, int w, int h) => x >= 0 && x < w && y >= 0 && y < h;
 
         static int CountHumanTiles(MapData d, TileBase[] b)

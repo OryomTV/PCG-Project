@@ -19,7 +19,9 @@ namespace PCG.Project
 
         [Header("Human Tiles")]
         public TileBase roadTile;
-        public TileBase cityTile;
+
+        [Tooltip("Drag and Drop tiles")]
+        public TileBase[] cityTiles;
 
         [Header("World Settings")]
         [Range(10, 2000)] public int width = 200;
